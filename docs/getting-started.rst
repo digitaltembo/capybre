@@ -20,3 +20,44 @@ Then, just install Capybre with pip! ::
     pip install capybre
 
 
+Simple Usages
+-------------
+
+Here are a few simple usages to get you up and running. For more detail, see the other docs::
+    
+    # convert between formats; creates 'PrideAndPrejudice.mobi'
+
+    from capybre import convert
+
+    convert('PrideAndPrejudice.epub', as_ext='mobi')
+
+
+    # extract metadata 
+    from capybre import extract_metada
+
+    metadata = extract_metadata('PrideAndPrejudice.epub')
+
+    # prints "Pride and Prejudice"
+    print(metadata.title)
+
+
+    # extract cover from metadata; saves as cover.jpg
+    from capybre import extract_cover
+
+    extract_cover('PrideAndPrejudice.epub', output_file='cover.jpg')
+
+
+    # fetch metadata from internet sources
+    from capybre import fetch_metadata
+
+    metadata = fetch_metadata(title='Pride and Prejudice')
+
+    # prints Jane Austen
+    print(metadata.author)
+
+
+    # download cover from internet sources; saves as cover.jpg
+    from capybre import fetch_cover
+
+    fetch_cover(title='Pride and Prejudice')
+

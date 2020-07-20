@@ -9,9 +9,10 @@ Welcome to Capybre's documentation!
 A thin pythonic wrapper around some of Calibre's command line features for ebook-manipulation and information. 
 
 Right now, it can:
-* convert ebooks
-* extract metadata (including cover image) from an ebook file
-* fetch metadata (including cover image) from various internet sources given some identifying information
+
+- convert ebooks
+- extract metadata (including cover image) from an ebook file
+- fetch metadata (including cover image) from various internet sources given some identifying information
 
 All with a simple call to the python library!
 
