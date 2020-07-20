@@ -34,17 +34,24 @@ class MetadataTest(TestCase):
 
     def test_metadata_map(self):
         metadata_map = extract_metadata_map(helpers.SAMPLE_FILE)
-        self.assertEqual(metadata_map, {
-            'Title': 'Pride and Prejudice',
-            'Author(s)': 'Jane Austen [Austen, Jane]',
-            'Tags': 'England -- Fiction, Young women -- Fiction, ' +
-                    'Love stories, Sisters -- Fiction, Domestic fiction, ' +
-                    'Courtship -- Fiction, Social classes -- Fiction',
-            'Languages': 'eng',
-            'Published': '1998-06-01T04:00:00+00:00',
-            'Rights': 'Public domain in the USA.',
+        expectation = {
+            'Title':       'Pride and Prejudice',
+            'Author(s)':   'Jane Austen [Austen, Jane]',
+            'Tags':        'England -- Fiction, Young women -- Fiction, ' +
+                           'Love stories, Sisters -- Fiction, Domestic fiction, ' +
+                           'Courtship -- Fiction, Social classes -- Fiction',
+            'Languages':   'eng',
+            'Published':   '1998-06-01T00:00:00+00:00',
+            'Rights':      'Public domain in the USA.',
             'Identifiers': 'uri:http://www.gutenberg.org/1342'
-        })
+        }
+
+        for key, value in metadata_map.items():
+            if key == 'Published':
+                # publication time depends on timezone
+                self.assertTrue(value.startswith('1998-06-01'))
+            else:
+                self.assertEqual(value, expectation[key])
 
     def test_cover_extraction(self):
         file = helpers.local_path('cover.jpg')
