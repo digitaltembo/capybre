@@ -20,6 +20,7 @@ sys.path.insert(0, os.path.abspath('..'))
 project = 'Capybre'
 copyright = '2020, Nolan Hawkins'
 author = 'Nolan Hawkins'
+master_doc = 'index'
 
 
 # -- General configuration ---------------------------------------------------
