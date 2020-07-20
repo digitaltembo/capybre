@@ -1,5 +1,6 @@
 # Capybre
-![Tests](https://github.com/digitaltembo/capybre/workflows/Tests/badge.svg)
+![Tests](https://github.com/digitaltembo/capybre/workflows/Tests/badge.svg) [![Documentation Status](https://readthedocs.org/projects/capybre/badge/?version=latest)](https://capybre.readthedocs.io/en/latest/?badge=latest) [![PyPI version](https://badge.fury.io/py/capybre.svg)](https://badge.fury.io/py/capybre)
+
 
 Thin python wrapper over (some of) the Calibre CLI. Can be used for ebook conversion, metadata-extraction, and metadata-lookup:
 
