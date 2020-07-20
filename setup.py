@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setup(
     name='capybre',
     version='0.0.1',
-    description='Python interface for calibre\'s command line tools',
+    description='Python interface for Calibre\'s command line tools',
     long_description=long_description,
     long_description_content_type="text/markdown",
     url='http://github.com/digitaltembo/capybre',
@@ -20,7 +20,7 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.1',
+    python_requires='>=3.6',
     test_suite='nose.collector',
     tests_require=['nose'],
 )
