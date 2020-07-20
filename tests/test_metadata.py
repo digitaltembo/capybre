@@ -1,9 +1,15 @@
 import os
 from unittest import TestCase
 
-from capybre import extract_metadata, extract_metadata_map, extract_cover, extracted_cover_fileobj
+from capybre import (
+    extract_metadata,
+    extract_metadata_map,
+    extract_cover,
+    extracted_cover_fileobj
+)
 
 from . import helpers
+
 
 class MetadataTest(TestCase):
 
@@ -15,13 +21,13 @@ class MetadataTest(TestCase):
         self.assertEqual(metadata.author_sort, 'Austen, Jane')
         print(metadata.tags)
         self.assertEqual(metadata.tags, [
-            'England -- Fiction', 
-            'Young women -- Fiction', 
-            'Love stories', 
-            'Sisters -- Fiction', 
-            'Domestic fiction', 
-            'Courtship -- Fiction', 
-            'Social classes -- Fiction', 
+            'England -- Fiction',
+            'Young women -- Fiction',
+            'Love stories',
+            'Sisters -- Fiction',
+            'Domestic fiction',
+            'Courtship -- Fiction',
+            'Social classes -- Fiction',
             'Language: eng'
         ])
         # that's probably good enough, although there are more fields defined
@@ -29,12 +35,14 @@ class MetadataTest(TestCase):
     def test_metadata_map(self):
         metadata_map = extract_metadata_map(helpers.SAMPLE_FILE)
         self.assertEqual(metadata_map, {
-            'Title': 'Pride and Prejudice', 
-            'Author(s)': 'Jane Austen [Austen, Jane]', 
-            'Tags': 'England -- Fiction, Young women -- Fiction, Love stories, Sisters -- Fiction, Domestic fiction, Courtship -- Fiction, Social classes -- Fiction', 
-            'Languages': 'eng', 
-            'Published': '1998-06-01T04:00:00+00:00', 
-            'Rights': 'Public domain in the USA.', 
+            'Title': 'Pride and Prejudice',
+            'Author(s)': 'Jane Austen [Austen, Jane]',
+            'Tags': 'England -- Fiction, Young women -- Fiction, ' +
+                    'Love stories, Sisters -- Fiction, Domestic fiction, ' +
+                    'Courtship -- Fiction, Social classes -- Fiction',
+            'Languages': 'eng',
+            'Published': '1998-06-01T04:00:00+00:00',
+            'Rights': 'Public domain in the USA.',
             'Identifiers': 'uri:http://www.gutenberg.org/1342'
         })
 
@@ -54,7 +62,3 @@ class MetadataTest(TestCase):
             self.assertTrue(True)
         self.assertTrue(f_file.closed)
         self.assertEqual(helpers.local_files(), initial_dir)
-
-
-
-

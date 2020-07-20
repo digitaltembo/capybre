@@ -1,29 +1,29 @@
-from enum import Enum 
+from enum import Enum
+
 
 class EbookFormat(Enum):
     """
-    EbookFormat is an enum representation of the more supported output ebook formats
-    EPUB, LIT, LRF, FB2, MOBI, PDB, PDF, PMLZ, RB, TCR, TXT
+    EbookFormat is an enum representation of the supported output ebook
+    formats: EPUB, LIT, LRF, FB2, MOBI, PDB, PDF, PMLZ, RB, TCR, TXT
     """
     UNKNOWN = 0
-    EPUB    = 1
-    LIT     = 2
-    LRF     = 3
-    FB2     = 4
-    MOBI    = 5
-    PDB     = 6
-    PDF     = 7
-    PMLZ    = 8
-    RB      = 9
-    TCR     = 10
-    TXT     = 11
+    EPUB = 1
+    LIT = 2
+    LRF = 3
+    FB2 = 4
+    MOBI = 5
+    PDB = 6
+    PDF = 7
+    PMLZ = 8
+    RB = 9
+    TCR = 10
+    TXT = 11
 
     def to_ext(self) -> str:
         """Gets the extension for the given EbookFormat Enum value"""
         if self in EBOOK_FORMAT_MAP:
             return EBOOK_FORMAT_MAP[self]
         return '???'
-        
 
     @staticmethod
     def from_ext(name):
@@ -33,21 +33,21 @@ class EbookFormat(Enum):
             return EBOOK_FORMAT_INVERSE_MAP[name]
         return EbookFormat.UNKNOWN
 
+
 EBOOK_FORMAT_MAP = {
-    EbookFormat.EPUB    : 'epub',
-    EbookFormat.LIT     : 'lit',
-    EbookFormat.LRF     : 'lrt',
-    EbookFormat.FB2     : 'fb2',
-    EbookFormat.MOBI    : 'mobi',
-    EbookFormat.PDB     : 'pdb',
-    EbookFormat.PDF     : 'pdf',
-    EbookFormat.PMLZ    : 'pmlz',
-    EbookFormat.RB      : 'rb',
-    EbookFormat.TCR     : 'tcr',
-    EbookFormat.TXT     : 'txt'
+    EbookFormat.EPUB: 'epub',
+    EbookFormat.LIT:  'lit',
+    EbookFormat.LRF:  'lrt',
+    EbookFormat.FB2:  'fb2',
+    EbookFormat.MOBI: 'mobi',
+    EbookFormat.PDB:  'pdb',
+    EbookFormat.PDF:  'pdf',
+    EbookFormat.PMLZ: 'pmlz',
+    EbookFormat.RB:   'rb',
+    EbookFormat.TCR:  'tcr',
+    EbookFormat.TXT:  'txt'
 }
 
-EBOOK_FORMAT_INVERSE_MAP = {value:key for key, value in EBOOK_FORMAT_MAP.items()}
-
-
-
+EBOOK_FORMAT_INVERSE_MAP = {
+    value: key for key, value in EBOOK_FORMAT_MAP.items()
+}

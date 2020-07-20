@@ -5,6 +5,7 @@ from capybre import convert, converted_fileobj, EbookFormat
 
 from . import helpers
 
+
 class ConversionTest(TestCase):
     def test_convert(self):
         output_file = helpers.local_path('test.mobi')
@@ -33,5 +34,3 @@ class ConversionTest(TestCase):
             self.assertEqual(f.mode, 'rb')
         self.assertTrue(f_file.closed)
         self.assertEqual(helpers.local_files(), initial_dir)
-
-
