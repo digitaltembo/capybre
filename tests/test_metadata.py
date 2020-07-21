@@ -1,11 +1,12 @@
 import os
 from unittest import TestCase
-
+from datetime import date
 from capybre import (
     extract_metadata,
     extract_metadata_map,
     extract_cover,
-    extracted_cover_fileobj
+    extracted_cover_fileobj,
+    EbookFormat,
 )
 
 from . import helpers
@@ -30,6 +31,8 @@ class MetadataTest(TestCase):
             'Social classes -- Fiction',
             'Language: eng'
         ])
+        self.assertEqual(metadata.publication_date, date(1998, 6, 1))
+        self.assertEqual(metadata.ebook_format, EbookFormat.EPUB)
         # that's probably good enough, although there are more fields defined
 
     def test_metadata_map(self):

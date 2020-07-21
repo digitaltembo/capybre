@@ -47,7 +47,7 @@ fetch_cover(title='Pride and Prejudice')
 
 First, you need to download Calibre's command line tools.
 
-You can follow instructions `on Calibre's site <https://calibre-ebook.com/download>`_ to download, or download through package managers: 
+You can follow instructions [on Calibre's site](https://calibre-ebook.com/download>) to download, or download through package managers: 
 ```  
 # on Ubuntu
 sudo apt-get install calibre

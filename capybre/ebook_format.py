@@ -1,5 +1,6 @@
 from enum import Enum
 
+import os
 
 class EbookFormat(Enum):
     """
@@ -32,6 +33,11 @@ class EbookFormat(Enum):
         if name in EBOOK_FORMAT_INVERSE_MAP:
             return EBOOK_FORMAT_INVERSE_MAP[name]
         return EbookFormat.UNKNOWN
+
+    @staticmethod
+    def from_filename(filename):
+        _,ext = os.path.splitext(filename)
+        return EbookFormat.from_ext(ext[1:])
 
 
 EBOOK_FORMAT_MAP = {
