@@ -7,10 +7,11 @@ ebook files
 
 import os
 import re
-from datetime import datetime
+import datetime
 from typing import List
 
 from .helpers import random_filename, check_output, call
+from .ebook_format import EbookFormat
 
 
 class Metadata():
@@ -27,7 +28,7 @@ class Metadata():
             and publisher tags
         isbn (str): ISBN
         description (str): Paragraph length text
-        publication_date (datetime): Publication date of this edition
+        publication_date (date): Publication date of this edition
     """
     title: str
     author: str
@@ -35,7 +36,8 @@ class Metadata():
     tags: List[str]
     isbn: str
     description: str
-    publication_date: datetime
+    publication_date: datetime.date
+    ebook_format: EbookFormat
 
     def __init__(
         self,
@@ -45,7 +47,8 @@ class Metadata():
         tags=[],
         isbn='',
         description='',
-        publication_date=None
+        publication_date=None,
+        ebook_format=EbookFormat.UNKNOWN
     ):
         self.title = title
         self.author = author
@@ -54,6 +57,7 @@ class Metadata():
         self.isbn = isbn
         self.description = description
         self.publication_date = publication_date
+        self.ebook_format = ebook_format
 
 
 TITLE = 'Title'
@@ -80,7 +84,9 @@ def extract_metadata(input_file) -> Metadata:
     Returns:
         :class:`Metadata` object
     """
-    return clean_metadata_map(extract_metadata_map(input_file))
+    metadata = clean_metadata_map(extract_metadata_map(input_file))
+    metadata.ebook_format = EbookFormat.from_filename(input_file)
+    return metadata
 
 
 def extract_metadata_map(input_file: str):
@@ -269,7 +275,8 @@ def get_description(mmap):
 def get_date(mmap):
     if PUBLISHED in mmap:
         try:
-            return datetime.strptime(mmap[PUBLISHED], '%Y-%m-%dT%H:%M:%S+%z')
+            date, _, _ = mmap[PUBLISHED].partition('T')
+            return datetime.datetime.strptime(date, '%Y-%m-%d').date()
         except(Exception):
             return None
     return None
