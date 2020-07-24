@@ -1,8 +1,8 @@
-from enum import Enum
+from enum import IntEnum
 
 import os
 
-class EbookFormat(Enum):
+class EbookFormat(IntEnum):
     """
     EbookFormat is an enum representation of the supported output ebook
     formats: EPUB, LIT, LRF, FB2, MOBI, PDB, PDF, PMLZ, RB, TCR, TXT
