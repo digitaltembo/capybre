@@ -8,7 +8,7 @@ ebook files
 import os
 import re
 import datetime
-from typing import List
+from typing import List, Dict, Optional
 
 from .helpers import random_filename, check_output, call
 from .ebook_format import EbookFormat
@@ -16,48 +16,73 @@ from .ebook_format import EbookFormat
 
 class Metadata():
     """
-    Somewhat opinionated standardization of the metadata format.
-    The title field is guaranteed to exist, but everything else may just be
-    an empty string
+    Standardization of the metadata output from `ebook-meta` with mild changes
+    to parse and clean the data.
+
+    The title field is guaranteed to exist, and ebook_format defaults ito
+    EbookFormat.UNKNOWN if not specified, but everything else may be Nonr
 
     Args:
-        title (str): Title
-        author (str): Author
+        author (str): Author (Looks like this may be an &-seperated list of
+            authors for multi-author works)
         author_sort (str): String by which the author should be sorted
-        tags (List[str]): List of tags, inluding possible rating, series,
-            and publisher tags
-        isbn (str): ISBN
         description (str): Paragraph length text
+        ebookFormat (EbookFormat): Enum of ebook formats used by Calibre
+        identifiers (Dict[str,str]): Dict of identifiers, like {'isbn':'xxx'}
+        isbn (str): ISBN
+        language (str): Language used, seemingly in 3-letter language codes
+        lastEdited (date): Timestamp on the file
         publication_date (date): Publication date of this edition
+        publisher (str): Publisher's name
+        rating (int): Rating, out of 5?
+        series (str): Series that this belongs to
+            (possibly including a number indicating rank in the series)
+        tags (List[str]): List of tags describing the book
+        title (str): Title
     """
-    title: str
-    author: str
-    author_sort: str
-    tags: List[str]
-    isbn: str
-    description: str
-    publication_date: datetime.date
-    ebook_format: EbookFormat
+
+    author:           Optional[str]
+    author_sort:      Optional[str]
+    description:      Optional[str]
+    ebook_format:     EbookFormat
+    identifiers:      Optional[Dict[str, str]]
+    isbn:             Optional[str]
+    language:         Optional[str]
+    lastEdited:       Optional[datetime.date]
+    publication_date: Optional[datetime.date]
+    publisher:        Optional[str]
+    rating:           Optional[int]
+    series:           Optional[str]
+    tags:             Optional[List[str]]
+    title:            str
 
     def __init__(
         self,
-        title='',
-        author='',
-        author_sort='',
-        tags=[],
-        isbn='',
-        description='',
+        author=None,
+        author_sort=None,
+        description=None,
+        ebook_format=EbookFormat.UNKNOWN,
+        identifiers=None,
+        isbn=None,
         publication_date=None,
-        ebook_format=EbookFormat.UNKNOWN
+        publisher=None,
+        rating=None,
+        series=None,
+        tags=None,
+        title=None
     ):
-        self.title = title
         self.author = author
         self.author_sort = author_sort
-        self.tags = tags
-        self.isbn = isbn
         self.description = description
-        self.publication_date = publication_date
         self.ebook_format = ebook_format
+        self.identifiers = identifiers
+        self.isbn = isbn
+        self.publication_date = publication_date
+        self.publisher = publisher
+        self.rating = rating
+        self.series = series
+        self.tags = tags
+        self.title = title
 
 
 TITLE = 'Title'
@@ -71,6 +96,7 @@ SERIES = 'Series'
 RATING = 'Rating'
 ISBN = 'ISBN'
 PUBLISHED = 'Published'
+LAST_EDITED = 'Timestamp'
 
 CALIBRE_AUTHOR_RE = re.compile("(.+)\\[(.+)\\]")
 CALIBRE_ISBN_RE = re.compile('isbn:(.+)')
@@ -135,21 +161,29 @@ def clean_metadata_map(metadata_map):
     Returns:
         :class:`Metadata` object
     """
-    title = get_title(metadata_map)
     author, author_sort = get_author_and_sort(metadata_map)
+    description = get_string(metadata_map, DESCRIPTION)
+    identifiers, isbn = get_identifiers(metadata_map)
+    last_edited = get_date(metadata_map, LAST_EDITED)
+    publication_date = get_date(metadata_map, PUBLISHED)
+    publisher = get_string(metadata_map, PUBLISHED)
+    rating = get_rating(metadata_map)
+    series = get_string(metadata_map, SERIES)
     tags = get_tags(metadata_map)
-    isbn = get_isbn(metadata_map)
-    description = get_description(metadata_map)
-    publication_date = get_date(metadata_map)
+    title = get_string(metadata_map, TITLE)
 
     return Metadata(
-        title=title,
         author=author,
         author_sort=author_sort,
-        tags=tags,
-        isbn=isbn,
         description=description,
-        publication_date=publication_date
+        identifiers=identifiers,
+        isbn=isbn,
+        publication_date=publication_date,
+        publisher=publisher,
+        rating=rating,
+        series=series,
+        tags=tags,
+        title=title,
     )
 
 
@@ -216,13 +250,9 @@ class extracted_cover_fileobj:
 """
 
 
-def get_title(mmap):
-    return mmap[TITLE] if TITLE in mmap else ''
-
-
 def get_author_and_sort(mmap):
-    author = ''
-    author_sort = ''
+    author = None
+    author_sort = None
     if AUTHOR in mmap:
         author = mmap[AUTHOR]
         match = CALIBRE_AUTHOR_RE.match(author)
@@ -239,44 +269,47 @@ def get_author_and_sort(mmap):
 
 
 def get_tags(mmap):
-    tags = []
     if TAGS in mmap:
-        tags += mmap[TAGS].split(',')
-    if LANGUAGE in mmap:
-        tags.append('Language: '+mmap[LANGUAGE])
-    if PUBLISHER in mmap:
-        tags.append('Publisher: '+mmap[PUBLISHER])
-    if RATING in mmap:
-        tags.append('Rating: ' + mmap[RATING])
-    if SERIES in mmap:
-        tags.append('Series: ' + mmap[SERIES])
-
-    return [t.strip() for t in tags]
+        return [t.strip() for t in mmap[TAGS].split(',')]
+    return None
 
 
-def get_isbn(mmap):
+def get_identifiers(mmap):
+    identifiers = None
+    isbn = None
     if ISBN in mmap:
-        return mmap[ISBN]
+        isbn = mmap[ISBN]
     if IDENTIFIERS in mmap:
-        identifiers = mmap[IDENTIFIERS].split(',')
-        for id in identifiers:
-            match = CALIBRE_ISBN_RE.match(id)
-            if match:
-                return match[1]
-    return ''
+        identifiers = {
+            key.strip(): value.strip()
+            for key, _, value in [
+                i.partition(':') for i in mmap[IDENTIFIERS].split(',')
+            ]
+        }
+        if isbn is None:
+            isbn = identifiers.get('isbn')
+    return isbn, identifiers
 
 
-def get_description(mmap):
-    if DESCRIPTION in mmap:
-        return mmap[DESCRIPTION]
-    return ''
+def get_string(mmap, key):
+    if key in mmap:
+        return mmap[key]
+    return None
 
 
-def get_date(mmap):
-    if PUBLISHED in mmap:
+def get_date(mmap, key):
+    if key in mmap:
         try:
-            date, _, _ = mmap[PUBLISHED].partition('T')
+            date, _, _ = mmap[key].partition('T')
             return datetime.datetime.strptime(date, '%Y-%m-%d').date()
+        except(Exception):
+            return None
+    return None
+
+def get_rating(mmap):
+    if RATING in mmap:
+        try:
+            return int(mmap[RATING])
         except(Exception):
             return None
     return None

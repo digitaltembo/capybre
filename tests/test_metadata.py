@@ -28,8 +28,7 @@ class MetadataTest(TestCase):
             'Sisters -- Fiction',
             'Domestic fiction',
             'Courtship -- Fiction',
-            'Social classes -- Fiction',
-            'Language: eng'
+            'Social classes -- Fiction'
         ])
         self.assertEqual(metadata.publication_date, date(1998, 6, 1))
         self.assertEqual(metadata.ebook_format, EbookFormat.EPUB)
