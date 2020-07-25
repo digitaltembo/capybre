@@ -171,7 +171,7 @@ def clean_metadata_map(metadata_map):
     language = get_string(metadata_map, LANGUAGE)
     last_edited = get_date(metadata_map, LAST_EDITED)
     publication_date = get_date(metadata_map, PUBLISHED)
-    publisher = get_string(metadata_map, PUBLISHED)
+    publisher = get_string(metadata_map, PUBLISHER)
     rating = get_rating(metadata_map)
     series = get_string(metadata_map, SERIES)
     tags = get_tags(metadata_map)
