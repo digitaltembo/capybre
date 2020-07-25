@@ -167,7 +167,7 @@ def clean_metadata_map(metadata_map):
     """
     author, author_sort = get_author_and_sort(metadata_map)
     description = get_string(metadata_map, DESCRIPTION)
-    identifiers, isbn = get_identifiers(metadata_map)
+    identifiers, isbn = get_identifiers_and_isbn(metadata_map)
     language = get_string(metadata_map, LANGUAGE)
     last_edited = get_date(metadata_map, LAST_EDITED)
     publication_date = get_date(metadata_map, PUBLISHED)
@@ -281,7 +281,7 @@ def get_tags(mmap):
     return None
 
 
-def get_identifiers(mmap):
+def get_identifiers_and_isbn(mmap):
     identifiers = None
     isbn = None
     if ISBN in mmap:
@@ -295,7 +295,7 @@ def get_identifiers(mmap):
         }
         if isbn is None:
             isbn = identifiers.get('isbn')
-    return isbn, identifiers
+    return identifiers, isbn
 
 
 def get_string(mmap, key):
