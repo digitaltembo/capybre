@@ -31,7 +31,7 @@ class Metadata():
         identifiers (Dict[str,str]): Dict of identifiers, like {'isbn':'xxx'}
         isbn (str): ISBN
         language (str): Language used, seemingly in 3-letter language codes
-        lastEdited (date): Timestamp on the file
+        last_edited (date): Timestamp on the file
         publication_date (date): Publication date of this edition
         publisher (str): Publisher's name
         rating (int): Rating, out of 5?
@@ -48,7 +48,7 @@ class Metadata():
     identifiers:      Optional[Dict[str, str]]
     isbn:             Optional[str]
     language:         Optional[str]
-    lastEdited:       Optional[datetime.date]
+    last_edited:      Optional[datetime.date]
     publication_date: Optional[datetime.date]
     publisher:        Optional[str]
     rating:           Optional[int]
@@ -64,6 +64,8 @@ class Metadata():
         ebook_format=EbookFormat.UNKNOWN,
         identifiers=None,
         isbn=None,
+        language=None,
+        last_edited=None,
         publication_date=None,
         publisher=None,
         rating=None,
@@ -77,6 +79,8 @@ class Metadata():
         self.ebook_format = ebook_format
         self.identifiers = identifiers
         self.isbn = isbn
+        self.language = language
+        self.last_edited = last_edited
         self.publication_date = publication_date
         self.publisher = publisher
         self.rating = rating
@@ -164,6 +168,7 @@ def clean_metadata_map(metadata_map):
     author, author_sort = get_author_and_sort(metadata_map)
     description = get_string(metadata_map, DESCRIPTION)
     identifiers, isbn = get_identifiers(metadata_map)
+    language = get_string(metadata_map, LANGUAGE)
     last_edited = get_date(metadata_map, LAST_EDITED)
     publication_date = get_date(metadata_map, PUBLISHED)
     publisher = get_string(metadata_map, PUBLISHED)
@@ -178,6 +183,8 @@ def clean_metadata_map(metadata_map):
         description=description,
         identifiers=identifiers,
         isbn=isbn,
+        language=language,
+        last_edited=last_edited,
         publication_date=publication_date,
         publisher=publisher,
         rating=rating,
@@ -305,6 +312,7 @@ def get_date(mmap, key):
         except(Exception):
             return None
     return None
+
 
 def get_rating(mmap):
     if RATING in mmap:
