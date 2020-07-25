@@ -16,23 +16,36 @@ class MetadataTest(TestCase):
 
     def test_metadata(self):
         metadata = extract_metadata(helpers.SAMPLE_FILE)
-
-        self.assertEqual(metadata.title, 'Pride and Prejudice')
-        self.assertEqual(metadata.author, 'Jane Austen')
-        self.assertEqual(metadata.author_sort, 'Austen, Jane')
-        print(metadata.tags)
-        self.assertEqual(metadata.tags, [
-            'England -- Fiction',
-            'Young women -- Fiction',
-            'Love stories',
-            'Sisters -- Fiction',
-            'Domestic fiction',
-            'Courtship -- Fiction',
-            'Social classes -- Fiction'
-        ])
-        self.assertEqual(metadata.publication_date, date(1998, 6, 1))
-        self.assertEqual(metadata.ebook_format, EbookFormat.EPUB)
-        # that's probably good enough, although there are more fields defined
+        expected_dict = {
+            'author': 'Jane Austen',
+            'author_sort': 'Austen, Jane',
+            'description': None,
+            'ebook_format': EbookFormat.EPUB,
+            'identifiers': {'uri': 'http://www.gutenberg.org/1342'},
+            'isbn': None,
+            'language': 'eng',
+            'last_edited': None,
+            'publication_date': date(1998, 6, 1),
+            'publisher': None,
+            'rating': None,
+            'series': None,
+            'tags': [
+                'England -- Fiction',
+                'Young women -- Fiction',
+                'Love stories',
+                'Sisters -- Fiction',
+                'Domestic fiction',
+                'Courtship -- Fiction',
+                'Social classes -- Fiction'
+            ],
+            'title': 'Pride and Prejudice'
+        }
+        for key, value in metadata.__dict__.items():
+            self.assertEqual(
+                value,
+                expected_dict[key],
+                'Metadata item {} doesn\t match'.format(key)
+            )
 
     def test_metadata_map(self):
         metadata_map = extract_metadata_map(helpers.SAMPLE_FILE)

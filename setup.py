@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='capybre',
-    version='0.0.5',
+    version='0.0.6',
     description='Python interface for Calibre\'s command line tools',
     long_description=long_description,
     long_description_content_type="text/markdown",
